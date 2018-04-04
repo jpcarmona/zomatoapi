@@ -4,9 +4,10 @@
 
 import requests
 import os
+from funciones import get_city
 
 key=os.environ["key"]
-cabecera={"Accept": "application/json", "user-key": key  }
+city=get_city(key)
 
 num=0
 url1="https://developers.zomato.com/api/v2.1/search?entity_id=36932&entity_type=subzone&start="+str(num)
