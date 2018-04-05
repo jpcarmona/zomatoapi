@@ -2,34 +2,25 @@
 
 ##-- bash> export key="XXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 
-import requests
 import os
-from funciones import get_city
+from funciones import get_city, get_restaurants
 
 key=os.environ["key"]
-city=get_city(key)
 
-num=0
-url1="https://developers.zomato.com/api/v2.1/search?entity_id=36932&entity_type=subzone&start="+str(num)
-r1=requests.get(url1,headers=cabecera)
+city=input('Ciudad para ver sus restaurantes ("0" para salir): ').replace(' ', '%20')
+while city != '0':
+	if not get_city(key,city):
+		print('{} no existe en Zomato'.format(city))
+		city=input('Por favor introduzca una ciudad que exista ("0" para salir): ').replace(' ', '%20')
+		continue
+	else:
+		entity_city=get_city(key,city)
+	num=0
+	get_restaurants(entity_city,key,num)
+	opcion=input("\nDesea seguir viendo restaurantes de {} (s/si, n/no)\n".format(entity_city[2]))
+	while opcion == "s":
+		num+=20
+		get_restaurants(entity_city,key,num)		
+		opcion=input("\nDesea seguir viendo restaurantes de Nueva York (s/si, n/no)\n")
+	city=input('Desea introducir otra ciudad para ver sus restaurantes ("0" para salir): ').replace(' ', '%20')
 
-if r1.status_code == 200:
-	doc = r1.json()
-	num_res=doc['results_found']
-	print('Nueva York tiene',num_res,'restaurantes.\n')
-	for res in doc['restaurants']:
-		print('-->',res['restaurant']['name'])
-
-opcion=input("\nDesea seguir viendo restaurantes de Nueva York (s/si, n/no)\n")
-while opcion=="s":
-	num+=20
-	url1="https://developers.zomato.com/api/v2.1/search?entity_id=36932&entity_type=subzone&start="+str(num)
-	r1=requests.get(url1,headers=cabecera)
-	
-	if r1.status_code == 200:
-		doc = r1.json()
-		num_res=doc['results_found']
-		for res in doc['restaurants']:
-			print('-->',res['restaurant']['name'])
-	
-	opcion=input("\nDesea seguir viendo restaurantes de Nueva York (s/si, n/no)\n")
