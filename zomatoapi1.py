@@ -18,15 +18,14 @@ def get_city_details(key,city):
 		else:			
 			entity_id=doc['location_suggestions'][0]['entity_id']
 			entity_type=doc['location_suggestions'][0]['entity_type']	
-			city_name=doc['location_suggestions'][0]['city_name']
-			print(entity_id,entity_type,city_name)
+			city_name=doc['location_suggestions'][0]['city_name']			
 			return entity_id,entity_type,city_name
 
 def get_restaurants(city_details,key,num):
-#	entity_id=city_details[0]
-#	entity_type=city_details[1]
-#	city_name=city_details[2]
-	url="https://developers.zomato.com/api/v2.1/search?entity_id={}&entity_type={}&start={}".format(city_details[:2],num)
+	entity_id=city_details[0]
+	entity_type=city_details[1]
+	city_name=city_details[2]
+	url="https://developers.zomato.com/api/v2.1/search?entity_id={}&entity_type={}&start={}".format(entity_id,entity_type,num)
 	r1=get_request(url,key)
 	if r1.status_code == 200:
 		doc = r1.json()		
